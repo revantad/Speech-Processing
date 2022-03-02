@@ -5,10 +5,10 @@ import os
 def random_file_gen(folder_path, num_files = 1):
 # Random file selection -- inputs (folder_path, number_of_files)
     files = os.listdir(folder_path)
-    file_path = np.empty(shape = num_files)
+    file_path = []
     for i in range(0, num_files):
         rand = np.random.randint(len(files))
-        file_path[i] = folder_path + files[rand]
+        file_path.append(folder_path + files[rand])
 
     return file_path    
 
