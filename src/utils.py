@@ -3,6 +3,7 @@ import scipy as sc
 import os
 
 def random_file_gen(folder_path, num_files = 1):
+# Random file selection -- inputs (folder_path, number_of_files)
     files = os.listdir(folder_path)
     file_path = np.empty(shape = num_files)
     for i in range(0, num_files):
@@ -11,7 +12,9 @@ def random_file_gen(folder_path, num_files = 1):
 
     return file_path    
 
+
 def white_noise(signal, snr):
+# White noise generation -- inputs (signal, SNR)
     sig_len = len(signal)
     sensor_rms_amp = np.sqrt(np.mean(np.abs(signal)**2))
     noise_amp = sensor_rms_amp/(10**(snr/20))
@@ -19,6 +22,7 @@ def white_noise(signal, snr):
     return noise
 
 def interferer(signal, interfere_signal, sir):
+# Interference signal generation -- inputs (signal, intereferer signal, SIR)
     sensor_rms_amp = np.sqrt(np.mean(np.abs(signal)**2))
     interferer_amp = sensor_rms_amp/(10**(sir/20))
 
@@ -33,6 +37,7 @@ def interferer(signal, interfere_signal, sir):
     return interfere
     
 def gccphat(Refsig, Sig, fs, d, interp = 16, c = 343):
+# Angle of Arrival calculation using GCC-PHAT -- inputs(Reference signal, Signal, Sampling Freq, Inter-microphone distance, interpolation, speed of sound)
     max_tau = None
     sig1 = Refsig
     sig2 = Sig
