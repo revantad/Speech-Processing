@@ -10,7 +10,6 @@ from scipy.io import wavfile
 import src.utils as util
 import matplotlib.pyplot as plt
 
-
 folder_path = 'data/MS-SNSD/clean_test/'
 file_path = util.random_file_gen(folder_path = folder_path, num_files = 2)
 
@@ -52,16 +51,18 @@ for m in range(M, len(time)):
 
     w = w + 2*mu*np.inner(e[ind_forward], sensor_sig[ind_reverse])
 
-plt.figure(102)
+plt.figure(1)
+plt.subplot(3, 1, 1)
 plt.plot(time, np.real(audio_dat))
 plt.title('Original Signal')
 
-plt.figure(1021)
+plt.subplot(3, 1, 2)
 plt.plot(time, np.real(sensor_sig))
 plt.title('Collected Signal')
 
-plt.figure(103)
-plt.plot(time, e)
+plt.subplot(3, 1, 3)
+plt.plot(time, np.real(e))
 plt.plot(time, np.real(audio_dat - y*np.exp(-1j*M/len(time)*np.pi)))
 plt.legend(['Prediction Error', 'Phase shifted predicted error'])
-plt.title('Prediction Error')   
+plt.title('Prediction Error')  
+plt.show() 
