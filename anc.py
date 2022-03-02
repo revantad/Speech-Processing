@@ -8,6 +8,7 @@ import numpy as np
 import scipy as sc
 from scipy.io import wavfile
 import src.utils as util
+import matplotlib.pyplot as plt
 
 
 folder_path = 'data/MS-SNSD/clean_test/'
@@ -32,7 +33,6 @@ else:
 noise = util.white_noise(audio_dat, snr)
 
 sensor_sig = audio_dat + noise + interfere_dat
-print(sensor_sig.shape, time.shape)
 
 M = 16
 mu = 1e-2
@@ -40,14 +40,28 @@ w = np.zeros(shape = (M), dtype = np.complex64)
 y = np.zeros(shape = time.shape, dtype = np.complex64)
 e = y
 
+
 for m in range(M, len(time)):
     s_sum = 0
-    for i in range(0, M):
-        s_sum = s_sum + w[i]*sensor_sig[m - i]
-    
-    y[m] = s_sum
-    e[m] = audio_dat[m] - y[m]
-    
-    for i in range(0, M):
-        w[i] = w[i] + 2*mu*e[m]*sensor_sig[m - i]
+    ind_forward = np.linspace(0, M - 1, M).astype(int)
+    ind_reverse = M - np.linspace(0, M - 1, M).astype(int)
 
+    s_sum = s_sum + np.inner(w, sensor_sig[ind_reverse])
+    y[m] = s_sum
+    e[m] = audio_dat[m] - y[m]    
+
+    w = w + 2*mu*np.inner(e[ind_forward], sensor_sig[ind_reverse])
+
+plt.figure(102)
+plt.plot(time, np.real(audio_dat))
+plt.title('Original Signal')
+
+plt.figure(1021)
+plt.plot(time, np.real(sensor_sig))
+plt.title('Collected Signal')
+
+plt.figure(103)
+plt.plot(time, e)
+plt.plot(time, np.real(audio_dat - y*np.exp(-1j*M/len(time)*np.pi)))
+plt.legend(['Prediction Error', 'Phase shifted predicted error'])
+plt.title('Prediction Error')   
